@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import Joi from "joi";
 import errors from "../../configurations/errors";
-import {UserInterface} from "../../interfaces/user.interface";
+import {UserInterface, UserRoleInterface} from "../../interfaces/user.interface";
 import {UserModel} from "../../models/user.model";
 import {DateUtil} from "../../utilities/date.util";
 import {SecurityUtil} from "../../utilities/security.util";
@@ -21,7 +21,7 @@ class Controller {
             password: Joi.string().required(),
         }), DATA, res)) return;
 
-        const USER: UserInterface = await UserRepository.byUsername(DATA.username);
+        const USER: UserRoleInterface = await UserRepository.byUsername(DATA.username);
         if (!USER) return res.status(404).json({
             code: errors.DATA_NOT_FOUND.code,
             message: errors.DATA_NOT_FOUND.message,

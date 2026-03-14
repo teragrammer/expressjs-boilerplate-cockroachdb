@@ -1,5 +1,3 @@
-import {RoleInterface} from "./role.interface";
-
 export interface UserInterface {
     id: string;
     first_name: string;
@@ -20,9 +18,10 @@ export interface UserInterface {
     failed_login_expired_at?: string | null;
     created_at: string | null;
     updated_at: string | null;
+}
 
-    role?: RoleInterface | null;
-    role_slug?: string;
-    role_is_public?: number;
-    role_is_bypass_authorization?: number;
+export interface UserRoleInterface extends UserInterface {
+    slug?: string;
+    is_public?: number;
+    is_bypass_authorization?: number;
 }

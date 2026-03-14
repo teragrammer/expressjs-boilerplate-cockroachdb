@@ -1,9 +1,10 @@
 import {UserModel} from "../models/user.model";
-import {UserInterface} from "../interfaces/user.interface";
+import {UserRoleInterface} from "../interfaces/user.interface";
+import {Knex} from "knex";
 
 class UserRepository {
     private static instance: UserRepository;
-    private readonly _PROFILE_COLUMN_COMPLETE = ["users.*", "roles.slug AS role_slug", "roles.is_public AS role_is_public", "roles.is_bypass_authorization AS role_is_bypass_authorization"];
+    private readonly _PROFILE_COLUMN_COMPLETE = ["users.*", "roles.slug", "roles.is_public", "roles.is_bypass_authorization"];
 
     constructor() {
     }
@@ -13,37 +14,37 @@ class UserRepository {
         return UserRepository.instance;
     }
 
-    userRoleJoiner() {
+    userRoleJoiner(): Knex.QueryBuilder {
         return UserModel().table()
             .select(this._PROFILE_COLUMN_COMPLETE)
             .leftJoin("roles", "users.role_id", "=", "roles.id");
     }
 
-    byId(id: string): Promise<UserInterface> {
+    byId(id: string): Promise<UserRoleInterface> {
         return this.userRoleJoiner()
             .where("users.id", id)
             .first();
     }
 
-    byUsername(username: string): Promise<UserInterface> {
+    byUsername(username: string): Promise<UserRoleInterface> {
         return this.userRoleJoiner()
             .where("users.username", username)
             .first();
     }
 
-    byEmail(email: string): Promise<UserInterface> {
+    byEmail(email: string): Promise<UserRoleInterface> {
         return this.userRoleJoiner()
             .where("users.email", email)
             .first();
     }
 
-    byPhone(phone: string): Promise<UserInterface> {
+    byPhone(phone: string): Promise<UserRoleInterface> {
         return this.userRoleJoiner()
             .where("users.phone", phone)
             .first();
     }
 
-    byContact(type: string, to: string): Promise<UserInterface> | null {
+    byContact(type: string, to: string): Promise<UserRoleInterface> | null {
         if (type === "email") return this.byEmail(to);
         if (type === "phone") return this.byPhone(to);
 

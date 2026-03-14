@@ -3,7 +3,7 @@ import Joi from "joi";
 import {ExtendJoiUtil} from "../../utilities/extend-joi.util";
 import {PasswordRecoveryModel, RECOVERY_EMAIL, RECOVERY_PHONE, TYPES} from "../../models/password-recovery.model";
 import {UserModel} from "../../models/user.model";
-import {UserInterface} from "../../interfaces/user.interface";
+import {UserInterface, UserRoleInterface} from "../../interfaces/user.interface";
 import errors from "../../configurations/errors";
 import {PasswordRecoveryInterface} from "../../interfaces/password-recovery.interface";
 import {DateUtil} from "../../utilities/date.util";
@@ -125,7 +125,7 @@ class Controller {
         await PasswordRecoveryModel().table().where("send_to", SEND_TO.value).delete();
 
         // set user authentication token
-        const USER: UserInterface | null = await UserRepository.byContact(SEND_TO.name, RECOVERY.send_to);
+        const USER: UserRoleInterface | null = await UserRepository.byContact(SEND_TO.name, RECOVERY.send_to);
         if (!USER) return res.status(404).json({
             code: errors.DATA_NOT_FOUND.code,
             message: errors.DATA_NOT_FOUND.message,

@@ -6,7 +6,7 @@ import errors from "../../configurations/errors";
 import {logger} from "../../configurations/logger";
 import {SecurityUtil} from "../../utilities/security.util";
 import {DateUtil} from "../../utilities/date.util";
-import {UserInterface} from "../../interfaces/user.interface";
+import {UserInterface, UserRoleInterface} from "../../interfaces/user.interface";
 import {RoleInterface} from "../../interfaces/role.interface";
 import AuthenticationTokenService from "../../services/authentication-token.service";
 import {RoleModel} from "../../models/role.model";
@@ -51,7 +51,7 @@ class Controller {
             const [ID] = await UserModel().table().returning("id").insert(DATA).then((rows: any[]) => rows.map(row => row.id));
 
             // get the full details
-            const CUSTOMER: UserInterface = await UserRepository.byId(ID);
+            const CUSTOMER: UserRoleInterface = await UserRepository.byId(ID);
             if (!CUSTOMER) return res.status(404).json({
                 code: errors.DATA_NOT_FOUND.code,
                 message: errors.DATA_NOT_FOUND.message,
