@@ -33,7 +33,6 @@ describe("HTTP Account", async () => {
             .set("Content-Type", "application/json")
             .set("Authorization", `Bearer ${credential.token}`)
             .then(async (response: any) => {
-                console.log("test.data", response.body, role);
                 id = response.body.id;
                 assert.equal(response.status, 200);
             });
