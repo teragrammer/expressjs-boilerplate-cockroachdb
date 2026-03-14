@@ -165,7 +165,7 @@ class Controller {
         });
 
         // remove sensitive data
-        delete USER.password;
+        UserModel().hidden(USER);
 
         return res.status(200).json(USER);
     });
