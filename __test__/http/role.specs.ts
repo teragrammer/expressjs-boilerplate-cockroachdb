@@ -1,0 +1,86 @@
+import "mocha";
+import request from "supertest";
+import {assert} from "chai";
+import app from "../../src";
+import {Credentials, mockCredential} from "../utils";
+import {RoleInterface} from "../../src/interfaces/role.interface";
+import {DBKnex} from "../../src/configurations/knex";
+import {RoleModel} from "../../src/models/role.model";
+
+describe("HTTP Account", async () => {
+    let credential: Credentials;
+    let id: any;
+
+    it("generate credential", async () => credential = await mockCredential({role: "admin", username: "test_admin"}));
+
+    it("POST /api/v1/roles", async () => {
+        return request(app)
+            .post("/api/v1/roles")
+            .send({
+                name: "Test",
+                slug: "test",
+                is_public: "1",
+                is_bypass_authorization: "0",
+            })
+            .set("Content-Type", "application/json")
+            .set("Authorization", `Bearer ${credential.token}`)
+            .then(async (response: any) => {
+                id = response.body.id;
+                assert.equal(response.status, 200);
+            });
+    });
+
+    it("PUT /api/v1/roles/:id", async () => {
+        const newName = "New Test";
+        return request(app)
+            .put(`/api/v1/roles/${id}`)
+            .send({
+                name: newName,
+                slug: "test",
+                is_public: "1",
+                is_bypass_authorization: "0",
+            })
+            .set("Content-Type", "application/json")
+            .set("Authorization", `Bearer ${credential.token}`)
+            .then(async (response: any) => {
+                const role: RoleInterface = await RoleModel().table().where("id", id).first();
+
+                assert.equal(response.status, 200);
+                assert.equal(role.name, newName);
+            });
+    });
+
+    it("GET /api/v1/roles", async () => {
+        return request(app)
+            .get("/api/v1/roles")
+            .query({
+                search: "test",
+            })
+            .set("Content-Type", "application/json")
+            .set("Authorization", `Bearer ${credential.token}`)
+            .then(async (response: any) => {
+                assert.equal(response.status, 200);
+            });
+    });
+
+    it("GET /api/v1/roles/:id", async () => {
+        return request(app)
+            .get(`/api/v1/roles/${id}`)
+            .set("Content-Type", "application/json")
+            .set("Authorization", `Bearer ${credential.token}`)
+            .then(async (response: any) => {
+                assert.equal(response.status, 200);
+                assert.equal(response.body.slug, "test");
+            });
+    });
+
+    it("DELETE /api/v1/roles/:id", async () => {
+        return request(app)
+            .delete(`/api/v1/roles/${id}`)
+            .set("Content-Type", "application/json")
+            .set("Authorization", `Bearer ${credential.token}`)
+            .then(async (response: any) => {
+                assert.equal(response.status, 200);
+            });
+    });
+});

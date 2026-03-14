@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    image: express-boilerplate-cockroachdb/backend:latest
+    container_name: express-boilerplate-cockroachdb-backend
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes:
+      - ./:/app
+    ports:
+      - "${PORT_EXPOSE}:${PORT}"
+    networks:
+      - expressjs-boilerplate-network
+networks:
+  expressjs-boilerplate-network:
+    name: expressjs-boilerplate-network
+    driver: bridge

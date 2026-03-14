@@ -1,0 +1,44 @@
+import type {Knex} from "knex";
+import {GENDERS, STATUSES} from "../../src/models/user.model";
+
+export async function up(knex: Knex): Promise<void> {
+    return knex.schema.createTable("users", table => {
+        table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
+
+        table.string("first_name", 100).nullable();
+        table.string("middle_name", 100).nullable();
+        table.string("last_name", 100).nullable();
+        table.enum("gender", GENDERS).nullable();
+
+        table.text("address", "tinytext").nullable();
+        table.string("phone", 22).unique().index().nullable();
+        table.tinyint("is_phone_verified", 1).defaultTo(0).notNullable();
+        table.string("email", 180).unique().index().nullable();
+        table.tinyint("is_email_verified", 1).defaultTo(0).notNullable();
+
+        // user type
+        table.uuid("role_id").index().notNullable();
+        table.foreign("role_id")
+            .references("roles.id")
+            .onUpdate("CASCADE")
+            .onDelete("CASCADE");
+
+        table.string("username", 16).unique().index().nullable();
+        table.text("password", "tinytext").nullable();
+        table.enum("status", STATUSES).defaultTo("Activated");
+
+        table.integer("login_tries", 2).defaultTo(0);
+        table.dateTime("failed_login_expired_at").nullable();
+
+        table.text("comments", "tinytext").nullable();
+
+        table.dateTime("created_at").index().defaultTo(knex.fn.now()).nullable();
+        table.dateTime("updated_at").defaultTo(knex.fn.now()).nullable();
+        table.dateTime("deleted_at").index().nullable();
+    });
+}
+
+export async function down(knex: Knex): Promise<void> {
+    return knex.schema.dropTable("users");
+}
+
