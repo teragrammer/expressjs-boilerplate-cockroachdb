@@ -1,4 +1,4 @@
-export interface AuthenticationTokenInterface {
+export interface AuthenticationToken {
     id: string;
     user_id: string;
     expired_at: string | null;

@@ -1,4 +1,4 @@
-export interface UserInterface {
+export interface User {
     id: string;
     first_name: string;
     middle_name: string | null;
@@ -20,7 +20,7 @@ export interface UserInterface {
     updated_at: string | null;
 }
 
-export interface UserRoleInterface extends UserInterface {
+export interface UserRole extends User {
     slug?: string;
     is_public?: number;
     is_bypass_authorization?: number;

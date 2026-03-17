@@ -1,4 +1,4 @@
-export interface RouteGuardInterface {
+export interface RouteGuard {
     id: string;
     role_id: string;
     route: string;
