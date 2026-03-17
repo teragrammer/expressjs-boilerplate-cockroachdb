@@ -1,5 +1,5 @@
-import {RoleInterface} from "../src/interfaces/role.interface";
-import {UserInterface, UserRoleInterface} from "../src/interfaces/user.interface";
+import {Role} from "../src/interfaces/role";
+import {User, UserRole} from "../src/interfaces/user";
 import UserRepository from "../src/repositories/user.repository";
 import AuthenticationTokenService from "../src/services/authentication-token.service";
 import {UserModel} from "../src/models/user.model";
@@ -15,7 +15,7 @@ export interface Options {
 }
 
 export interface Credentials {
-    user: UserRoleInterface;
+    user: UserRole;
     token: string;
 }
 
@@ -26,7 +26,7 @@ export async function mockCredential(options: Options): Promise<Credentials> {
     // remove previous test user
     await UserModel().table().where("username", options.username).delete();
 
-    const ROLE: RoleInterface = await RoleModel().table().where("slug", options.role).first();
+    const ROLE: Role = await RoleModel().table().where("slug", options.role).first();
 
     // create a new mock user
     const [ID] = await UserModel().table().insert({
@@ -37,7 +37,7 @@ export async function mockCredential(options: Options): Promise<Credentials> {
     }).returning("id").then((rows: any[]) => rows.map(row => row.id));
 
     // get the full details
-    const user: UserRoleInterface = await UserRepository.byId(ID);
+    const user: UserRole = await UserRepository.byId(ID);
 
     // generate a new token
     const token: string = await AuthenticationTokenService.token(user, tfa);
