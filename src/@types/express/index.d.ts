@@ -1,11 +1,11 @@
-import {UserInterface, UserRoleInterface} from "../../interfaces/user.interface";
-import {AuthenticationTokenInterface} from "../../interfaces/authentication-token.interface";
+import {User, UserRole} from "../../interfaces/user";
+import {AuthenticationToken} from "../../interfaces/authentication-token";
 import {JwtExtendedPayload} from "../../models/authentication-token.model";
 
 export interface RequestCredentials {
     jwt: JwtExtendedPayload;
-    user: () => Promise<UserRoleInterface>;
-    authentication: () => Promise<AuthenticationTokenInterface>;
+    user: () => Promise<UserRole>;
+    authentication: () => Promise<AuthenticationToken>;
 }
 
 export interface RequestSanitize {
