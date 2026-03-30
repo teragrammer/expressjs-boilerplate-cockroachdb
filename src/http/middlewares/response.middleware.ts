@@ -13,11 +13,11 @@ const RESPONSE_MIDDLEWARE = async (_req: Request, res: Response, next: NextFunct
             });
         },
 
-        fields: (status: number, errors: any) => {
+        fields: (status: number, _errors: any) => {
             res.status(status).json({
                 code: errors.VALIDATION_FAILED.code,
                 message: errors.VALIDATION_FAILED.message,
-                errors: [errors],
+                errors: [_errors],
             });
         },
     };
