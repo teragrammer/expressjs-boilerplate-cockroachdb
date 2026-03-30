@@ -1,5 +1,5 @@
 import {UserModel} from "../models/user.model";
-import {UserRoleInterface} from "../interfaces/user.interface";
+import {UserRole} from "../interfaces/user";
 import {Knex} from "knex";
 
 class UserRepository {
@@ -20,31 +20,31 @@ class UserRepository {
             .leftJoin("roles", "users.role_id", "=", "roles.id");
     }
 
-    byId(id: string): Promise<UserRoleInterface> {
+    byId(id: string): Promise<UserRole> {
         return this.userRoleJoiner()
             .where("users.id", id)
             .first();
     }
 
-    byUsername(username: string): Promise<UserRoleInterface> {
+    byUsername(username: string): Promise<UserRole> {
         return this.userRoleJoiner()
             .where("users.username", username)
             .first();
     }
 
-    byEmail(email: string): Promise<UserRoleInterface> {
+    byEmail(email: string): Promise<UserRole> {
         return this.userRoleJoiner()
             .where("users.email", email)
             .first();
     }
 
-    byPhone(phone: string): Promise<UserRoleInterface> {
+    byPhone(phone: string): Promise<UserRole> {
         return this.userRoleJoiner()
             .where("users.phone", phone)
             .first();
     }
 
-    byContact(type: string, to: string): Promise<UserRoleInterface> | null {
+    byContact(type: string, to: string): Promise<UserRole> | null {
         if (type === "email") return this.byEmail(to);
         if (type === "phone") return this.byPhone(to);
 
